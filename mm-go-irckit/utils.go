@@ -18,3 +18,11 @@ func removeStringInSlice(a string, list []string) []string {
 	}
 	return newlist
 }
+
+func shortenMessage(s string) string {
+	if len(s) > 64 {
+		return s[0:64] + "..."
+	}
+
+	return s
+}

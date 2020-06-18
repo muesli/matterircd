@@ -305,8 +305,18 @@ func (u *User) handleWsActionPost(rmsg *model.WebSocketEvent) {
 		if resp.Error != nil {
 			logger.Debugf("Unable to get parent post for", data)
 		} else {
-			parentGhost := u.createMMUser(u.mc.GetUser(parentPost.UserId))
-			data.Message = fmt.Sprintf("%s (re @%s: %s)", data.Message, parentGhost.Nick, parentPost.Message)
+			threadPosts, resp := u.mc.Client.GetPostThread(data.Id, "")
+			if resp.Error != nil {
+				logger.Debugf("Unable to get thread for", data)
+			} else {
+				parentGhost := u.createMMUser(u.mc.GetUser(parentPost.UserId))
+				if len(threadPosts.Posts) == 2 {
+					// first response
+					data.Message = fmt.Sprintf("%s (re @%s: %s %s)", data.Message, parentGhost.Nick, data.ParentId[0:6], shortenMessage(parentPost.Message))
+				} else {
+					data.Message = fmt.Sprintf("%s (re @%s: %s)", data.Message, parentGhost.Nick, data.ParentId[0:6])
+				}
+			}
 		}
 	}
 	// create new "ghost" user
