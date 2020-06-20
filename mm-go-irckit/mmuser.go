@@ -313,9 +313,9 @@ func (u *User) handleWsActionPost(rmsg *model.WebSocketEvent) {
 				parentGhost := u.createMMUser(u.mc.GetUser(parentPost.UserId))
 				if len(threadPosts.Posts) == 2 {
 					// first response
-					data.Message = fmt.Sprintf("%s (re @%s: [%s] %s)", data.Message, parentGhost.Nick, data.ParentId[0:6], shortenMessage(parentPost.Message))
+					data.Message = fmt.Sprintf("[%s] %s (re @%s: %s)", data.ParentId[0:6], data.Message, parentGhost.Nick, shortenMessage(parentPost.Message))
 				} else {
-					data.Message = fmt.Sprintf("%s (re @%s: [%s])", data.Message, parentGhost.Nick, data.ParentId[0:6])
+					data.Message = fmt.Sprintf("[%s] %s", data.ParentId[0:6], data.Message)
 				}
 			}
 		}
